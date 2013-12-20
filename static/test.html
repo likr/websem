@@ -1,0 +1,27 @@
+<html>
+<head>
+<script src="http://localhost:5000/static/sem.js"></script>
+<script>
+var alpha = [
+  [1, 0],
+  [2, 0],
+  [2, 1],
+]
+var sigma = [
+  [0, 0],
+  [1, 1],
+  [2, 2]
+]
+var S = [
+  [54.90526316, 7.09473684, 10.36842105],
+  [7.09473684, 2.74736842, 2.31578947],
+  [10.36842105, 2.31578947, 4.73684211],
+]
+sem(3, alpha, sigma, S, function(res) {
+  console.log(res);
+});
+</script>
+</head>
+<body>
+</body>
+</html>
