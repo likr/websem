@@ -1,6 +1,6 @@
-import json
 from flask import Flask
 from flask import request
+from flask import jsonify
 import sem
 app = Flask(__name__)
 
@@ -17,7 +17,9 @@ def semapp():
         'alpha': [(i, j, A[i, j]) for i, j in alpha],
         'sigma': [(i, j, Sigma_e[i, j]) for i, j in sigma],
     }
-    return json.dumps(result)
+    response = jsonify(result)
+    response.headers['Content-Type'] = 'application/json'
+    return response
 
 
 if __name__ == '__main__':

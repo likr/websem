@@ -11,7 +11,7 @@ function sem(n, alpha, sigma, S, callback) {
       callback(JSON.parse(this.responseText));
     }
   };
-  xhr.open('POST', 'http://localhost:5000/sem');
+  xhr.open('POST', 'http://hyperinfo.viz.media.kyoto-u.ac.jp/wsgi/websem/sem');
   xhr.setRequestHeader('Content-Type', 'application/json');
   console.log(JSON.stringify(obj));
   xhr.send(JSON.stringify(obj));

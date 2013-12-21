@@ -54,4 +54,6 @@ if __name__ == '__main__':
         [7.09473684, 2.74736842, 2.31578947],
         [10.36842105, 2.31578947, 4.73684211],
     ]
-    sem(3, alpha, sigma, S)
+    A, Sigma_e = sem(3, alpha, sigma, S)
+    print(A)
+    print(Sigma_e)
