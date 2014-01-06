@@ -11,7 +11,7 @@ function sem(n, alpha, sigma, S, callback) {
       callback(JSON.parse(this.responseText));
     }
   };
-  xhr.open('POST', '../sem');
+  xhr.open('POST', 'http://hyperinfo.viz.media.kyoto-u.ac.jp/wsgi/websem/sem');
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify(obj));
 }
@@ -27,7 +27,7 @@ function cov(data, callback) {
       callback(JSON.parse(this.responseText));
     }
   };
-  xhr.open('POST', '../cov');
+  xhr.open('POST', 'http://hyperinfo.viz.media.kyoto-u.ac.jp/wsgi/websem/cov');
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify(obj));
 }
