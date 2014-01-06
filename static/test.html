@@ -1,7 +1,15 @@
 <html>
 <head>
-<script src="http://hyperinfo.viz.media.kyoto-u.ac.jp/wsgi/websem/static/sem.js"></script>
+<script src="sem.js"></script>
 <script>
+var data = [
+  [0, 1, 2],
+  [2, 1, 0]
+];
+cov(data, function(res) {
+  console.log(res);
+});
+
 var alpha = [
   [1, 0],
   [2, 0],

@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import request
 from flask import jsonify
+import numpy
 import sem
 app = Flask(__name__)
 
@@ -22,5 +23,16 @@ def semapp():
     return response
 
 
+@app.route('/cov', methods=['POST'])
+def cov():
+    obj = request.json
+    result = {
+        'data': [[v for v in row] for row in numpy.cov(obj['data'])],
+    }
+    response = jsonify(result)
+    response.headers['Content-Type'] = 'application/json'
+    return response
+
+
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
