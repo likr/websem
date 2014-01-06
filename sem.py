@@ -43,7 +43,7 @@ def gfi(Sigma, S):
     SigmaS = numpy.dot(SigmaInv, S)
     denom = numpy.trace(numpy.dot(SigmaS, SigmaS.T))
     numer = numpy.trace(numpy.dot(SigmaS - I, (SigmaS - I).T))
-    return (1 - numer) / denom
+    return 1 - numer / denom
 
 
 def sem(n, alpha, sigma, S):
