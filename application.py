@@ -13,10 +13,11 @@ def semapp():
     alpha = obj['alpha']
     sigma = obj['sigma']
     S = obj['S']
-    A, Sigma_e = sem.sem(n, alpha, sigma, S)
+    A, Sigma_e, gfi = sem.sem(n, alpha, sigma, S)
     result = {
         'alpha': [(i, j, A[i, j]) for i, j in alpha],
         'sigma': [(i, j, Sigma_e[i, j]) for i, j in sigma],
+        'GFI': gfi,
     }
     response = jsonify(result)
     response.headers['Content-Type'] = 'application/json'

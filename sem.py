@@ -1,4 +1,5 @@
 from __future__ import print_function
+from __future__ import division
 import numpy
 from scipy import optimize
 
@@ -13,8 +14,7 @@ class Objective(object):
     def __call__(self, phi):
         n = self.n
         A, Sigma_e = self.make_matrix(phi)
-        T = numpy.linalg.inv(numpy.identity(n) - A)
-        Sigma = numpy.dot(numpy.dot(T, Sigma_e), T.T)
+        Sigma = self.Sigma(A, Sigma_e)
         e = (self.S - Sigma) * numpy.tri(n)
         e.shape = (n * n,)
         return e
@@ -30,12 +30,28 @@ class Objective(object):
             Sigma_e[i, j] = Sigma_e[j, i] = next(it)
         return A, Sigma_e
 
+    def Sigma(self, A, Sigma_e):
+        n = self.n
+        T = numpy.linalg.inv(numpy.identity(n) - A)
+        return numpy.dot(numpy.dot(T, Sigma_e), T.T)
+
+
+def gfi(Sigma, S):
+    n = len(Sigma)
+    I = numpy.identity(n)
+    SigmaInv = numpy.linalg.inv(Sigma)
+    SigmaS = numpy.dot(SigmaInv, S)
+    denom = numpy.trace(numpy.dot(SigmaS, SigmaS.T))
+    numer = numpy.trace(numpy.dot(SigmaS - I, (SigmaS - I).T))
+    return (1 - numer) / denom
+
 
 def sem(n, alpha, sigma, S):
     obj = Objective(n, alpha, sigma, S)
     sol = optimize.leastsq(obj, [0] * (len(alpha) + len(sigma)))[0]
     A, Sigma_e = obj.make_matrix(sol)
-    return A, Sigma_e
+    Sigma = obj.Sigma(A, Sigma_e)
+    return A, Sigma_e, gfi(Sigma, S)
 
 
 if __name__ == '__main__':
@@ -54,6 +70,7 @@ if __name__ == '__main__':
         [7.09473684, 2.74736842, 2.31578947],
         [10.36842105, 2.31578947, 4.73684211],
     ]
-    A, Sigma_e = sem(3, alpha, sigma, S)
+    A, Sigma_e, gfi = sem(3, alpha, sigma, S)
     print(A)
     print(Sigma_e)
+    print(gfi)
