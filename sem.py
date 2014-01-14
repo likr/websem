@@ -13,10 +13,11 @@ class Objective(object):
 
     def __call__(self, phi):
         n = self.n
+        n_v = len(self.S)
         A, Sigma_e = self.make_matrix(phi)
         Sigma = self.Sigma(A, Sigma_e)
-        e = (self.S - Sigma) * numpy.tri(n)
-        e.shape = (n * n,)
+        e = (self.S - Sigma) * numpy.tri(n_v)
+        e.shape = (n_v * n_v,)
         return e
 
     def make_matrix(self, x):
@@ -31,9 +32,12 @@ class Objective(object):
         return A, Sigma_e
 
     def Sigma(self, A, Sigma_e):
-        n = self.n
-        T = numpy.linalg.inv(numpy.identity(n) - A)
-        return numpy.dot(numpy.dot(T, Sigma_e), T.T)
+        n_v = len(self.S)
+        I = numpy.identity(self.n)
+        U = numpy.zeros((n_v, self.n))
+        U[:, :n_v] = numpy.identity(n_v)
+        T = numpy.linalg.inv(I - A)
+        return numpy.dot(numpy.dot(numpy.dot(numpy.dot(U, T), Sigma_e), T.T), U.T)
 
 
 def gfi(Sigma, S):
@@ -47,8 +51,9 @@ def gfi(Sigma, S):
 
 
 def sem(n, alpha, sigma, S):
+    x0 = numpy.ones(len(alpha) + len(sigma)) / 10
     obj = Objective(n, alpha, sigma, S)
-    sol = optimize.leastsq(obj, [0] * (len(alpha) + len(sigma)))[0]
+    sol = optimize.leastsq(obj, x0)[0]
     A, Sigma_e = obj.make_matrix(sol)
     Sigma = obj.Sigma(A, Sigma_e)
     return A, Sigma_e, gfi(Sigma, S)
