@@ -18,6 +18,12 @@ def semapp():
         'alpha': [(i, j, A[i, j]) for i, j in alpha],
         'sigma': [(i, j, Sigma_e[i, j]) for i, j in sigma],
         'GFI': gfi,
+        'attributes': [
+            {
+                'name': 'GFI',
+                'value': gfi
+            }
+        ],
     }
     response = jsonify(result)
     response.headers['Content-Type'] = 'application/json'
