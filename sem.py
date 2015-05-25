@@ -63,29 +63,10 @@ def sem(n, alpha, sigma, S, sigma_fixed=None):
         sigma_fixed = []
     x0 = numpy.ones(len(alpha) + len(sigma)) / 10
     obj = Objective(n, alpha, sigma, S, sigma_fixed)
-    sol = optimize.leastsq(obj, x0)[0]
-    A, Sigma_e = obj.make_matrix(sol)
+    if len(x0) > 0:
+        sol = optimize.leastsq(obj, x0)[0]
+        A, Sigma_e = obj.make_matrix(sol)
+    else:
+        A, Sigma_e = obj.make_matrix(x0)
     Sigma = obj.Sigma(A, Sigma_e)
     return A, Sigma_e, gfi(Sigma, S)
-
-
-if __name__ == '__main__':
-    alpha = [
-        (1, 0),
-        (2, 0),
-        (2, 1),
-    ]
-    sigma = [
-        (0, 0),
-        (1, 1),
-        (2, 2)
-    ]
-    S = [
-        [54.90526316, 7.09473684, 10.36842105],
-        [7.09473684, 2.74736842, 2.31578947],
-        [10.36842105, 2.31578947, 4.73684211],
-    ]
-    A, Sigma_e, gfivalue = sem(3, alpha, sigma, S)
-    print(A)
-    print(Sigma_e)
-    print(gfivalue)
