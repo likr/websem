@@ -5,14 +5,14 @@ from scipy import optimize
 
 
 class Objective(object):
-    def __init__(self, n, alpha, sigma, S):
+    def __init__(self, n, alpha, sigma, S, sigma_fixed):
         self.n = n
         self.alpha = alpha
         self.sigma = sigma
         self.S = S
+        self.sigma_fixed = sigma_fixed
 
     def __call__(self, phi):
-        n = self.n
         n_v = len(self.S)
         A, Sigma_e = self.make_matrix(phi)
         Sigma = self.Sigma(A, Sigma_e)
@@ -29,6 +29,8 @@ class Objective(object):
             A[i, j] = next(it)
         for i, j in self.sigma:
             Sigma_e[i, j] = Sigma_e[j, i] = next(it)
+        for i, j, val in self.sigma_fixed:
+            Sigma_e[i, j] = val
         return A, Sigma_e
 
     def Sigma(self, A, Sigma_e):
@@ -37,7 +39,13 @@ class Objective(object):
         U = numpy.zeros((n_v, self.n))
         U[:, :n_v] = numpy.identity(n_v)
         T = numpy.linalg.inv(I - A)
-        return numpy.dot(numpy.dot(numpy.dot(numpy.dot(U, T), Sigma_e), T.T), U.T)
+        return numpy.dot(
+            numpy.dot(
+                numpy.dot(
+                    numpy.dot(U, T),
+                    Sigma_e),
+                T.T),
+            U.T)
 
 
 def gfi(Sigma, S):
@@ -50,9 +58,11 @@ def gfi(Sigma, S):
     return 1 - numer / denom
 
 
-def sem(n, alpha, sigma, S):
+def sem(n, alpha, sigma, S, sigma_fixed=None):
+    if sigma_fixed is None:
+        sigma_fixed = []
     x0 = numpy.ones(len(alpha) + len(sigma)) / 10
-    obj = Objective(n, alpha, sigma, S)
+    obj = Objective(n, alpha, sigma, S, sigma_fixed)
     sol = optimize.leastsq(obj, x0)[0]
     A, Sigma_e = obj.make_matrix(sol)
     Sigma = obj.Sigma(A, Sigma_e)
@@ -75,7 +85,7 @@ if __name__ == '__main__':
         [7.09473684, 2.74736842, 2.31578947],
         [10.36842105, 2.31578947, 4.73684211],
     ]
-    A, Sigma_e, gfi = sem(3, alpha, sigma, S)
+    A, Sigma_e, gfivalue = sem(3, alpha, sigma, S)
     print(A)
     print(Sigma_e)
-    print(gfi)
+    print(gfivalue)
