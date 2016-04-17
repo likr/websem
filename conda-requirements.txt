@@ -1,3 +1,5 @@
+python==3.5.1
+nomkl==1.0
 flask==0.10.1
 flask-cors==2.1.2
 gunicorn==19.1.0
