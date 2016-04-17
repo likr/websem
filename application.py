@@ -1,10 +1,12 @@
 from flask import Flask
 from flask import request
 from flask import jsonify
+from flask.ext.cors import CORS
 import numpy
 import sem
-app = Flask(__name__)
 
+app = Flask(__name__)
+CORS(app)
 
 @app.route('/sem', methods=['POST'])
 def semapp():
