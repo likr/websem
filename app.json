@@ -1,0 +1,7 @@
+{
+  "name": "websem",
+  "description": "REST API for computing SEM",
+  "image": "heroku/python",
+  "repository": "https://github.com/likr/websem",
+  "keywords": ["python" ]
+}

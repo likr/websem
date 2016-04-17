@@ -1,3 +1,4 @@
+from __future__ import print_function
 import unittest
 from sem import sem
 
@@ -23,7 +24,7 @@ class TestSem(unittest.TestCase):
             [10.36842105, 2.31578947, 4.73684211],
         ]
         A, Sigma_e, gfivalue = sem(3, alpha, sigma, S)
-        print A, Sigma_e, gfivalue
+        print(A, Sigma_e, gfivalue)
 
     def test_sem_empty(self):
         alpha = [
@@ -41,7 +42,8 @@ class TestSem(unittest.TestCase):
             [10.36842105, 2.31578947, 4.73684211],
         ]
         A, Sigma_e, gfivalue = sem(3, alpha, sigma, S, sigma_fixed)
-        print A, Sigma_e, gfivalue
+        print(A, Sigma_e, gfivalue)
+
 
     def test_sem_with_latent_variable(self):
         n = 8
@@ -76,7 +78,8 @@ class TestSem(unittest.TestCase):
         ]
 
         A, Sigma_e, gfivalue = sem(n, alpha, sigma, S, sigma_fixed)
-        print A, Sigma_e, gfivalue
+        print(A, Sigma_e, gfivalue)
+
 
 if __name__ == '__main__':
     unittest.main()
