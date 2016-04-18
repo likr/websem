@@ -5,11 +5,12 @@ from scipy import optimize
 
 
 class Objective(object):
-    def __init__(self, n, alpha, sigma, S, sigma_fixed):
+    def __init__(self, n, alpha, sigma, S, alpha_fixed, sigma_fixed):
         self.n = n
         self.alpha = alpha
         self.sigma = sigma
         self.S = S
+        self.alpha_fixed = alpha_fixed
         self.sigma_fixed = sigma_fixed
 
     def __call__(self, phi):
@@ -27,10 +28,12 @@ class Objective(object):
         Sigma_e = numpy.zeros([n, n])
         for i, j in self.alpha:
             A[i, j] = next(it)
+        for i, j, val in self.alpha_fixed:
+            A[i, j] = val
         for i, j in self.sigma:
             Sigma_e[i, j] = Sigma_e[j, i] = next(it)
         for i, j, val in self.sigma_fixed:
-            Sigma_e[i, j] = val
+            Sigma_e[i, j] = Sigma_e[j, i] = val
         return A, Sigma_e
 
     def Sigma(self, A, Sigma_e):
@@ -58,11 +61,13 @@ def gfi(Sigma, S):
     return 1 - numer / denom
 
 
-def sem(n, alpha, sigma, S, sigma_fixed=None):
+def sem(n, alpha, sigma, S, alpha_fixed=None, sigma_fixed=None):
+    if alpha_fixed is None:
+        alpha_fixed = []
     if sigma_fixed is None:
         sigma_fixed = []
     x0 = numpy.ones(len(alpha) + len(sigma)) / 10
-    obj = Objective(n, alpha, sigma, S, sigma_fixed)
+    obj = Objective(n, alpha, sigma, S, alpha_fixed, sigma_fixed)
     if len(x0) > 0:
         sol = optimize.leastsq(obj, x0)[0]
         A, Sigma_e = obj.make_matrix(sol)

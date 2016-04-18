@@ -13,10 +13,11 @@ def semapp():
     obj = request.json
     n = obj['n']
     alpha = obj['alpha']
+    alpha_fixed = obj['alpha_fixed'] if 'alpha_fixed' in obj else []
     sigma = obj['sigma']
     sigma_fixed = obj['sigma_fixed'] if 'sigma_fixed' in obj else []
     S = obj['S']
-    A, Sigma_e, gfi = sem.sem(n, alpha, sigma, S, sigma_fixed)
+    A, Sigma_e, gfi = sem.sem(n, alpha, sigma, S, alpha_fixed, sigma_fixed)
     result = {
         'alpha': [(i, j, A[i, j]) for i, j in alpha],
         'sigma': [(i, j, Sigma_e[i, j]) for i, j in sigma],
