@@ -19,8 +19,8 @@ def semapp():
     S = obj['S']
     A, Sigma_e, gfi = sem.sem(n, alpha, sigma, S, alpha_fixed, sigma_fixed)
     result = {
-        'alpha': [(i, j, A[i, j]) for i, j in alpha],
-        'sigma': [(i, j, Sigma_e[i, j]) for i, j in sigma],
+        'alpha': [(i, j, A[i, j]) for i, j in alpha] + alpha_fixed,
+        'sigma': [(i, j, Sigma_e[i, j]) for i, j in sigma] + sigma_fixed,
         'GFI': gfi,
         'attributes': [
             {
