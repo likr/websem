@@ -23,8 +23,8 @@ class TestSem(unittest.TestCase):
             [7.09473684, 2.74736842, 2.31578947],
             [10.36842105, 2.31578947, 4.73684211],
         ]
-        A, Sigma_e, gfivalue = sem(3, alpha, sigma, S)
-        print(A, Sigma_e, gfivalue)
+        A, Sigma_e, gfivalue, agfivalue = sem(3, alpha, sigma, S)
+        print(A, Sigma_e, gfivalue, agfivalue)
 
     def test_sem_empty(self):
         alpha = [
@@ -41,8 +41,8 @@ class TestSem(unittest.TestCase):
             [7.09473684, 2.74736842, 2.31578947],
             [10.36842105, 2.31578947, 4.73684211],
         ]
-        A, Sigma_e, gfivalue = sem(3, alpha, sigma, S, [], sigma_fixed)
-        print(A, Sigma_e, gfivalue)
+        A, Sigma_e, gfivalue, agfivalue = sem(3, alpha, sigma, S, [], sigma_fixed)
+        print(A, Sigma_e, gfivalue, agfivalue)
 
     def test_sem_with_latent_variable(self):
         n = 8
@@ -76,8 +76,8 @@ class TestSem(unittest.TestCase):
             [0.818047119, 0.671860664, 0.478518010, 0.609564865, 0.752387858, 1]
         ]
 
-        A, Sigma_e, gfivalue = sem(n, alpha, sigma, S, [], sigma_fixed)
-        print(A, Sigma_e, gfivalue)
+        A, Sigma_e, gfivalue, agfivalue = sem(n, alpha, sigma, S, [], sigma_fixed)
+        print(A, Sigma_e, gfivalue, agfivalue)
 
     def test_sem_mimic(self):
         n = 7
@@ -117,8 +117,8 @@ class TestSem(unittest.TestCase):
             [0.818047119, 0.671860664, 0.478518010, 0.609564865, 0.752387858, 1]
         ]
 
-        A, Sigma_e, gfivalue = sem(n, alpha, sigma, S, alpha_fixed, sigma_fixed)
-        print(A, Sigma_e, gfivalue)
+        A, Sigma_e, gfivalue, agfivalue = sem(n, alpha, sigma, S, alpha_fixed, sigma_fixed)
+        print(A, Sigma_e, gfivalue, agfivalue)
 
 
 if __name__ == '__main__':

@@ -51,7 +51,7 @@ class Objective(object):
             U.T)
 
 
-def gfi(Sigma, S):
+def calc_gfi(Sigma, S):
     n = len(Sigma)
     I = numpy.identity(n)
     SigmaInv = numpy.linalg.inv(Sigma)
@@ -61,12 +61,32 @@ def gfi(Sigma, S):
     return 1 - numer / denom
 
 
+def calc_agfi(n, p, gfi):
+    """
+    AGFIを計算する
+
+    Args:
+        n:   観測変数の数
+        p:   推定する母数の数
+        gfi: 適合度
+
+    Returns:
+        AGFI(自由度調整済み適合度指標)
+    """
+    df = 0.5 * n * (n + 1) - p # 自由度
+    denom = 2 * df
+    numer = n * (n + 1) * (1 - gfi)
+    return 1 - numer / denom
+
+
 def sem(n, alpha, sigma, S, alpha_fixed=None, sigma_fixed=None):
     if alpha_fixed is None:
         alpha_fixed = []
     if sigma_fixed is None:
         sigma_fixed = []
-    x0 = numpy.ones(len(alpha) + len(sigma)) / 10
+
+    num_of_params = len(alpha) + len(sigma)
+    x0 = numpy.ones(num_of_params) / 10
     obj = Objective(n, alpha, sigma, S, alpha_fixed, sigma_fixed)
     if len(x0) > 0:
         sol = optimize.leastsq(obj, x0)[0]
@@ -74,4 +94,9 @@ def sem(n, alpha, sigma, S, alpha_fixed=None, sigma_fixed=None):
     else:
         A, Sigma_e = obj.make_matrix(x0)
     Sigma = obj.Sigma(A, Sigma_e)
-    return A, Sigma_e, gfi(Sigma, S)
+    gfi = calc_gfi(Sigma, S)
+
+    num_of_obs_vars = numpy.array(S).shape[0]
+    agfi = calc_agfi(num_of_obs_vars, num_of_params, gfi)
+
+    return A, Sigma_e, gfi, agfi
