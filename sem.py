@@ -61,10 +61,18 @@ def gfi(Sigma, S):
     return 1 - numer / denom
 
 
-# n:   観測変数の数
-# p:   推定する母数の数
-# gfi: 適合度
 def agfi(n, p, gfi):
+    """
+    AGFIを計算する
+
+    Args:
+        n:   観測変数の数
+        p:   推定する母数の数
+        gfi: 適合度
+
+    Returns:
+        AGFI(自由度調整済み適合度指標)
+    """
     df = 0.5 * n * (n + 1) - p # 自由度
     denom = 2 * df
     numer = n * (n + 1) * (1 - gfi)
