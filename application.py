@@ -17,7 +17,7 @@ def semapp():
     sigma = obj['sigma']
     sigma_fixed = obj['sigma_fixed'] if 'sigma_fixed' in obj else []
     S = obj['S']
-    A, Sigma_e, gfi = sem.sem(n, alpha, sigma, S, alpha_fixed, sigma_fixed)
+    A, Sigma_e, gfi, agfi = sem.sem(n, alpha, sigma, S, alpha_fixed, sigma_fixed)
     print(sigma_fixed, alpha_fixed)
     result = {
         'alpha': [(i, j, A[i, j]) for i, j in alpha] + alpha_fixed,
@@ -27,6 +27,10 @@ def semapp():
             {
                 'name': 'GFI',
                 'value': gfi
+            },
+            {
+                'name': 'AGFI',
+                'value': agfi
             }
         ],
     }
