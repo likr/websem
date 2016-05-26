@@ -51,7 +51,7 @@ class Objective(object):
             U.T)
 
 
-def gfi(Sigma, S):
+def calc_gfi(Sigma, S):
     n = len(Sigma)
     I = numpy.identity(n)
     SigmaInv = numpy.linalg.inv(Sigma)
@@ -61,7 +61,7 @@ def gfi(Sigma, S):
     return 1 - numer / denom
 
 
-def agfi(n, p, gfi):
+def calc_agfi(n, p, gfi):
     """
     AGFIを計算する
 
@@ -84,7 +84,9 @@ def sem(n, alpha, sigma, S, alpha_fixed=None, sigma_fixed=None):
         alpha_fixed = []
     if sigma_fixed is None:
         sigma_fixed = []
-    x0 = numpy.ones(len(alpha) + len(sigma)) / 10
+
+    num_of_params = len(alpha) + len(sigma)
+    x0 = numpy.ones(num_of_params) / 10
     obj = Objective(n, alpha, sigma, S, alpha_fixed, sigma_fixed)
     if len(x0) > 0:
         sol = optimize.leastsq(obj, x0)[0]
@@ -92,8 +94,9 @@ def sem(n, alpha, sigma, S, alpha_fixed=None, sigma_fixed=None):
     else:
         A, Sigma_e = obj.make_matrix(x0)
     Sigma = obj.Sigma(A, Sigma_e)
+    gfi = calc_gfi(Sigma, S)
 
-    _gfi = gfi(Sigma, S)
-    p = len(alpha) + len(sigma) # θの次数
+    num_of_obs_vars = numpy.array(S).shape[0]
+    agfi = calc_agfi(num_of_obs_vars, num_of_params, gfi)
 
-    return A, Sigma_e, _gfi, agfi(n, p, _gfi)
+    return A, Sigma_e, gfi, agfi
